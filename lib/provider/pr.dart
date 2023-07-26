@@ -1,26 +1,13 @@
-
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../models/book.dart';
-//import '../system/static_func.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert'; // Add this line
-
-part 'pr_initialize_part.dart';
 
 class Pr with ChangeNotifier {
-  int test = 10;
-
-
-
   List<Book> _books = [];
 
-  List<Book> get books => _books;
-
-  String getBooks () {
-
-    return _books.toString();
-  }
+  List<Book> get books => _books; // Геттер для получения списка книг
 
   Future<void> fetchBooks() async {
     try {
@@ -42,7 +29,6 @@ class Pr with ChangeNotifier {
           _books.add(book); // Добавляем книгу в список
         }
 
-        print(_books);
         notifyListeners();
       } else {
         // Если запрос завершился с ошибкой, обрабатываем ее
@@ -52,6 +38,4 @@ class Pr with ChangeNotifier {
       throw Exception('Failed to connect to the server');
     }
   }
-
-
 }
