@@ -4,7 +4,7 @@ class ScreenTwo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Экран 2'),
+      child: Text('Test Git'),
     );
   }
 }
