@@ -10,7 +10,8 @@ import '../models/book.dart';
 part 'pr_initialize_part.dart';
 
 class Pr with ChangeNotifier {
-  static const String baseUrl = 'http://lara-pro.loc/api/books/';
+  //static const String baseUrl = 'http://lara-pro.loc/api/books/';
+  static const String baseUrl = 'http://176.37.2.137:8080/api/books/';
 
   List<Book> _books = [];
   bool _isLoading = true;
