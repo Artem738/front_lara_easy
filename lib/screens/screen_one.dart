@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 
 import '../models/book.dart';
 import '../provider/pr.dart';
+import 'book_detail_page.dart';
 import 'screen_one/widget_drop_language.dart';
+import 'screen_one/widget_form_year.dart';
 
 class ScreenOne extends StatefulWidget {
   @override
@@ -11,8 +13,8 @@ class ScreenOne extends StatefulWidget {
 }
 
 class _ScreenOneState extends State<ScreenOne> {
-
   final ScrollController _scrollController = ScrollController();
+  bool _isFilterMenuOpen = false;
 
   @override
   void initState() {
@@ -27,56 +29,100 @@ class _ScreenOneState extends State<ScreenOne> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.atEdge &&
-        _scrollController.position.pixels != 0) {
+    if (_scrollController.position.atEdge && _scrollController.position.pixels != 0) {
       // User has scrolled to the end of the ListView
       // Call your method here to fetch more data or perform any other action
       context.read<Pr>().getBookData();
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            LanguageDropdown(), // Placing the dropdown menu at the top
-            SizedBox(height: 16), // Adding some spacing between the dropdown and the button
-            ElevatedButton(
-              onPressed: () {
-                context.read<Pr>().getBookData();
-              },
-              child: const Text('Load Data'),
-            ),
-            SizedBox(height: 16), // Adding some spacing between the dropdown and the button
-            ElevatedButton(
-              onPressed: () {
-                context.read<Pr>().showData();
-              },
-              child: const Text('Show Data'),
-            ),
-            SizedBox(height: 16), // Adding some spacing between the button and the text
-            if (context.watch<Pr>().books.isEmpty)
-              CircularProgressIndicator() // Show a loading spinner if _isLoading is true
-            else
-              Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: context.watch<Pr>().books.length,
-                  itemBuilder: (context, index) {
-                    Book book = context.watch<Pr>().books[index];
-                    return ListTile(
-                      title: Text(book.name),
-                      subtitle: Text(book.year.toString()),
-                      // Other fields you want to display for each book
-                    );
-                  },
-                ),
+      body: Column(
+        children: [
+          ExpansionTile(
+            title: _isFilterMenuOpen
+                ? Text("") // Hide the text when menu is open
+                : const Text(
+                    'Открыть меню фильтра',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
+            onExpansionChanged: (value) {
+              setState(() {
+                _isFilterMenuOpen = value;
+              });
+            },
+            children: [
+              // Your filter menu widgets go here
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(width: 16),
+                  LanguageDropdown(),
+                  SizedBox(width: 5),
+                  YearWidget(),
+                  SizedBox(width: 5),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<Pr>().getBookData();
+                    },
+                    child: const Text('Some Action'),
+                  ),
+                  SizedBox(width: 16),
+
+                ],
               ),
-          ],
-        ),
+            ],
+          ),
+          SizedBox(height: 16),
+          //if (!_isFilterMenuOpen) // Hide the button when the filter menu is expanded
+
+          if (context.watch<Pr>().books.isEmpty)
+            CircularProgressIndicator()
+          else
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: context.watch<Pr>().books.length,
+                itemBuilder: (context, index) {
+                  Book book = context.watch<Pr>().books[index];
+                  return ListTile(
+                    leading: ClipOval(
+                      child: Image.network(
+                        book.imageSmall,
+                        fit: BoxFit.cover,
+                        width: 50,
+                        height: 50,
+                        errorBuilder: (context, error, stackTrace) {
+                          return ClipOval(
+                            child: Image.network(
+                              'https://picsum.photos/id/1/100/100',
+                              fit: BoxFit.cover,
+                              //width: 50,
+                              height: 50,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    title: Text(book.name, style: TextStyle(fontSize: 15)),
+                    subtitle: Text("Year: ${book.year.toString()},  pages: ${book.pages}, lang: ${book.lang}"),
+                    trailing: Text("$index - ${book.id.toString()}"),
+                    dense: true,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 24.0),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => BookDetailPage(bookIndex: index, bookId: book.id),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+        ],
       ),
     );
   }

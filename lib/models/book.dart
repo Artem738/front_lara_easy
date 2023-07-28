@@ -4,6 +4,8 @@ class Book {
   final int year;
   final String lang;
   final int pages;
+  final String imageSmall;
+  final String imageLarge;
   final Category category; // Поле для хранения категории
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -14,6 +16,8 @@ class Book {
     required this.year,
     required this.lang,
     required this.pages,
+    required this.imageSmall,
+    required this.imageLarge,
     required this.category,
     required this.createdAt,
     required this.updatedAt,
@@ -34,6 +38,9 @@ class Book {
 
   // Геттер для получения количества страниц книги
   int get bookPages => pages;
+
+  // // Геттер для получения url of image
+  // String get bookImage => image;
 
   // Геттер для получения категории книги
   Category get bookCategory => category;

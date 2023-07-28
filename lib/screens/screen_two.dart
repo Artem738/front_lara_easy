@@ -10,8 +10,8 @@ class ScreenTwo extends StatefulWidget {
 class _ScreenTwoState extends State<ScreenTwo> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("Screen Two")),
+    return Scaffold(
+      body: Center(child: Text(context.watch<Pr>().books.length.toString())),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -17,17 +18,22 @@ class Pr with ChangeNotifier {
   bool get isLoading => _isLoading;
   int _lastId = 1;
 
-
-
   DateTime startDate = DateTime.parse('2000-01-01');
   DateTime endDate = DateTime.now();
   String selectedLanguage = 'en';
   int selectedYear = 2023;
 
-
   List<Book> get books => _books; // Геттер для получения списка книг
   int get lastId => _lastId; // Геттер для получения списка книг
 
+  // FILTER
+
+  void searchDataChanged() {
+    _books = [];
+    _lastId = 1;
+    getBookData();
+    notifyListeners();
+  }
 
   // GOGOGO getBookData
   Future<void> getBookData() async {
@@ -41,7 +47,7 @@ class Pr with ChangeNotifier {
     String formattedEndDate = endDate.toString().replaceAll(' ', 'T');
     String apiUrl = "$baseUrl?startDate=$formattedStartDate&endDate=$formattedEndDate"
         "&year=$selectedYearString&lang=$selectedLanguage&lastId=$_lastId";
-    // print(apiUrl);
+    print(apiUrl);
     // exit(0);
     final url = Uri.parse(apiUrl);
 
@@ -71,13 +77,21 @@ class Pr with ChangeNotifier {
   }
 
   List<Book> parseBooks(List<dynamic> dataList) {
+    //Adding random image    https://api.slingacademy.com/public/sample-photos/100.jpeg
+
     return dataList.map((data) {
+      Random random = Random();
+      int randomImageApiId = random.nextInt(100) + 1;
+
       return Book(
         id: data['id'],
         name: data['name'],
         year: data['year'],
         lang: data['lang'],
         pages: data['pages'],
+        //image: "https://api.slingacademy.com/public/sample-photos/${random.nextInt(100) + 1}.jpeg",
+        imageSmall: "https://picsum.photos/id/$randomImageApiId/100/100",
+        imageLarge: "https://picsum.photos/id/$randomImageApiId/1000/1000",
         category: Category(
           id: data['category']['id'],
           name: data['category']['name'],
@@ -91,9 +105,4 @@ class Pr with ChangeNotifier {
   void showData() {
     print(_books);
   }
-
-
-
-
-
 }
