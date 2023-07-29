@@ -65,6 +65,8 @@ class _ScreenOneState extends State<ScreenOne> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: 10),
+                  // Text(context.watch<Pr>().httpError),
+                  // SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -103,23 +105,22 @@ class _ScreenOneState extends State<ScreenOne> {
                       .watch<Pr>()
                       .books[index];
                   return ListTile(
-                    leading: ClipOval(
-                      child: Image.network(
-                        book.imageSmall,
-                        fit: BoxFit.cover,
-                        width: 50,
-                        height: 50,
-                        errorBuilder: (context, error, stackTrace) {
-                          return ClipOval(
-                            child: Image.network(
-                              'https://picsum.photos/id/1/100/100',
-                              fit: BoxFit.cover,
-                              //width: 50,
-                              height: 50,
-                            ),
-                          );
-                        },
+                    leading: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: NetworkImage(book.imageSmall),
+                          fit: BoxFit.cover,
+                        ),
                       ),
+                      child: book.imageSmall == null
+                          ? Image.network(
+                        'https://picsum.photos/id/1/100/100',
+                        fit: BoxFit.cover,
+                      )
+                          : null,
                     ),
                     title: Text(book.name, style: TextStyle(fontSize: 15)),
                     subtitle: Text("Year: ${book.year.toString()},  pages: ${book.pages}, lang: ${book.lang}"),

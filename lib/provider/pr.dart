@@ -16,9 +16,12 @@ part 'pr_search_form_part.dart';
 class Pr with ChangeNotifier {
   //static const String baseUrl = 'http://lara-pro.loc/api/books/';
   static const String baseUrl = 'http://176.37.2.137/api/books/';
+
+
+  String httpError = '...';
+
   List<Book> _books = [];
-  bool _isLoading = true;
-  bool get isLoading => _isLoading;
+
   int _lastId = 1;
   List<Book> get books => _books; // Геттер для получения списка книг
   int get lastId => _lastId; // Геттер для получения списка книг
@@ -55,19 +58,18 @@ class Pr with ChangeNotifier {
       final totalCount = meta['totalCount'];
 
       _books.addAll(totalCount == 0 ? [] : parseBooks(data));
-      // _isLoading = false;
+
       _lastId = meta['lastId'];
 
       //print(_books[3].name);
-
-      notifyListeners();
+      httpError = response.statusCode.toString();
+      notify();
     } else if (response.statusCode == 422) {
-      // Handle the error when API returns 422
-      // _books.clear();
-      // _isLoading = false;
-      notifyListeners();
+      httpError = response.statusCode.toString();
+      notify();
     } else {
-      print('Error: ${response.statusCode}');
+      httpError = response.statusCode.toString();
+      notify();
     }
   }
 
