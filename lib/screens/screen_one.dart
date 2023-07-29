@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/book.dart';
 import '../provider/pr.dart';
 import 'book_detail_page.dart';
+import 'screen_one/widget_date_picker.dart';
 import 'screen_one/widget_drop_language.dart';
 import 'screen_one/widget_form_year.dart';
 
@@ -43,11 +44,16 @@ class _ScreenOneState extends State<ScreenOne> {
         children: [
           ExpansionTile(
             title: _isFilterMenuOpen
-                ? Text("") // Hide the text when menu is open
+                ? Text(
+              'Закрыть меню фильтра',
+              textAlign: TextAlign.right,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+            ) // Hide the text when menu is open
                 : const Text(
-                    'Открыть меню фильтра',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
-                  ),
+              'Открыть меню фильтра',
+              textAlign: TextAlign.right,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+            ),
             onExpansionChanged: (value) {
               setState(() {
                 _isFilterMenuOpen = value;
@@ -55,22 +61,23 @@ class _ScreenOneState extends State<ScreenOne> {
             },
             children: [
               // Your filter menu widgets go here
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(width: 16),
-                  LanguageDropdown(),
-                  SizedBox(width: 5),
-                  YearWidget(),
-                  SizedBox(width: 5),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<Pr>().getBookData();
-                    },
-                    child: const Text('Some Action'),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(width: 16),
+                      LanguageDropdown(),
+                      SizedBox(width: 5),
+                      YearWidget(),
+                      SizedBox(width: 16),
+                    ],
                   ),
-                  SizedBox(width: 16),
-
+                  SizedBox(height: 7),
+                  DatePickerWidget(),
+                  SizedBox(height: 10),
                 ],
               ),
             ],
@@ -78,15 +85,23 @@ class _ScreenOneState extends State<ScreenOne> {
           SizedBox(height: 16),
           //if (!_isFilterMenuOpen) // Hide the button when the filter menu is expanded
 
-          if (context.watch<Pr>().books.isEmpty)
+          if (context
+              .watch<Pr>()
+              .books
+              .isEmpty)
             CircularProgressIndicator()
           else
             Expanded(
               child: ListView.builder(
                 controller: _scrollController,
-                itemCount: context.watch<Pr>().books.length,
+                itemCount: context
+                    .watch<Pr>()
+                    .books
+                    .length,
                 itemBuilder: (context, index) {
-                  Book book = context.watch<Pr>().books[index];
+                  Book book = context
+                      .watch<Pr>()
+                      .books[index];
                   return ListTile(
                     leading: ClipOval(
                       child: Image.network(

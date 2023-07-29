@@ -8,48 +8,40 @@ import 'dart:convert';
 import '../models/book.dart';
 
 part 'pr_initialize_part.dart';
+part 'pr_search_form_part.dart';
+
+
+
 
 class Pr with ChangeNotifier {
   //static const String baseUrl = 'http://lara-pro.loc/api/books/';
   static const String baseUrl = 'http://176.37.2.137/api/books/';
-
-
   List<Book> _books = [];
   bool _isLoading = true;
-
   bool get isLoading => _isLoading;
   int _lastId = 1;
-
-  DateTime selectedStartDate = DateTime.parse('2000-01-01');
-  DateTime selectedEndDate = DateTime.now();
-  String selectedLanguage = 'en';
-  int selectedYear = 2023;
-
   List<Book> get books => _books; // Геттер для получения списка книг
   int get lastId => _lastId; // Геттер для получения списка книг
 
-  // FILTER
-
-
-  void searchDataChanged() {
-    _books = [];
-    _lastId = 1;
-    getBookData();
+  void notify(){
     notifyListeners();
   }
+
+  // pr_search_form_part
+  SearchFormData searchFormData = SearchFormData();
 
   // GOGOGO getBookData
   Future<void> getBookData() async {
     // _isLoading = true;
 
     String selectedYearString = '';
-    if (selectedYear != 0) {
-      selectedYearString = selectedYear.toString();
+    if (searchFormData.selectedYear != 0) {
+      selectedYearString = searchFormData.selectedYear.toString();
     }
-    String formattedStartDate = selectedStartDate.toString().replaceAll(' ', 'T');
-    String formattedEndDate = selectedEndDate.toString().replaceAll(' ', 'T');
+    String formattedStartDate = searchFormData.selectedStartDate.toString().replaceAll(' ', 'T');
+    String formattedEndDate = searchFormData.selectedEndDate.toString().replaceAll(' ', 'T');
     String apiUrl = "$baseUrl?startDate=$formattedStartDate&endDate=$formattedEndDate"
-        "&year=$selectedYearString&lang=$selectedLanguage&lastId=$_lastId";
+        "&year=$selectedYearString&lang=${searchFormData.selectedLanguage}&lastId=$_lastId";
     print(apiUrl);
     // exit(0);
     final url = Uri.parse(apiUrl);

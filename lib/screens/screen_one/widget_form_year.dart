@@ -15,14 +15,18 @@ class _YearWidgetState extends State<YearWidget> {
   void initState() {
     super.initState();
     // Устанавливаем изначальное значение года из провайдера
-    _controller.text = context.read<Pr>().selectedYear.toString();
+    _controller.text = context.read<Pr>().searchFormData.selectedYear.toString();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16),
-      width: 100, // Установили максимальную ширину контейнера для года
+      padding: EdgeInsets.all(5),
+      width: 135, // Установили максимальную ширину контейнера для языка
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(5),
+      ), // Установили максимальную ширину контейнера для года
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -37,12 +41,12 @@ class _YearWidgetState extends State<YearWidget> {
             onSubmitted: (value) {
               print ("TextInputType year");
               int year = int.tryParse(value) ?? 0;
-              context.read<Pr>().selectedYear = year;
+              context.read<Pr>().searchFormData.selectedYear = year;
               context.read<Pr>().searchDataChanged();
             },
             decoration: InputDecoration(
               hintText: 'Year',
-              border: OutlineInputBorder(),
+             // border: OutlineInputBorder(),
             ),
           ),
         ],

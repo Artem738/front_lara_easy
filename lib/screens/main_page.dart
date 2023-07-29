@@ -31,25 +31,37 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    double maxWidth = 600.0; // Максимальная ширина для веба
+
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Простое учебное приложение'),
-      // ),
-      body: Column(
-        children: [
-          CustomHeader(),
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              children: _screens,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
+      body: Container(
+        color: Colors.grey[200], // Цвет фона (серый) вокруг главного контейнера
+        child: Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width < maxWidth
+                ? MediaQuery.of(context).size.width
+                : maxWidth,
+            child: Column(
+              children: [
+                CustomHeader(),
+                Expanded( // Этот Expanded будет занимать оставшееся пространство и устанавливать серый фон
+                  child: Container(
+                    color: Colors.white, // Цвет фона (обычный) главного контейнера
+                    child: PageView(
+                      controller: _pageController,
+                      children: _screens,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -82,16 +94,16 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
-
-
 class CustomHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    double headerHeight = 100.0; // Высота заголовка
+
     return Container(
-      height: 100, // Adjust the height as needed
+      height: headerHeight,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("images/books_header.jpg"), // Replace with your image path
+          image: AssetImage("images/books_header.jpg"), // Замените на свой путь к изображению
           fit: BoxFit.cover,
         ),
       ),
@@ -107,43 +119,45 @@ class CustomHeader extends StatelessWidget {
             ),
           ),
           // Content centered in the header
-          const Positioned.fill(
+          Positioned.fill(
             child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Welcome To Bookstore',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black,
-                          blurRadius: 5.0,
-                          offset: Offset(2.0, 2.0),
-                        ),
-                      ],
+              child: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Welcome To Bookstore',
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black,
+                            blurRadius: 5.0,
+                            offset: Offset(2.0, 2.0),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8), // Add some spacing between the texts
-                  Text(
-                    'Learning App For Testing Api',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black,
-                          blurRadius: 5.0,
-                          offset: Offset(2.0, 2.0),
-                        ),
-                      ],
+                    SizedBox(height: 8), // Добавить немного отступа между текстами
+                    Text(
+                      'Learning App For Testing Api',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black,
+                            blurRadius: 5.0,
+                            offset: Offset(2.0, 2.0),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -152,5 +166,3 @@ class CustomHeader extends StatelessWidget {
     );
   }
 }
-
-
