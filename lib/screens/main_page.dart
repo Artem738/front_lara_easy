@@ -142,7 +142,7 @@ class CustomHeader extends StatelessWidget {
                     ),
                     SizedBox(height: 8), // Добавить немного отступа между текстами
                     Text(
-                      'Learning App For Testing Api',
+                      'Learning App For Testing Out Web Api & App',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,

@@ -15,7 +15,8 @@ part 'pr_search_form_part.dart';
 
 class Pr with ChangeNotifier {
   //static const String baseUrl = 'http://lara-pro.loc/api/books/';
-  static const String baseUrl = 'http://176.37.2.137/api/books/';
+  //static const String baseUrl = 'http://176.37.2.137/api/books/';
+  static const String baseUrl = 'https://iamtex.com.ua/art-api/a738_bot/proxy/index.php'; //proxy!
 
 
   String httpError = '...';
