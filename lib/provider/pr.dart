@@ -11,7 +11,8 @@ part 'pr_initialize_part.dart';
 
 class Pr with ChangeNotifier {
   //static const String baseUrl = 'http://lara-pro.loc/api/books/';
-  static const String baseUrl = 'http://176.37.2.137:8080/api/books/';
+  static const String baseUrl = 'http://176.37.2.137/api/books/';
+
 
   List<Book> _books = [];
   bool _isLoading = true;
@@ -19,8 +20,8 @@ class Pr with ChangeNotifier {
   bool get isLoading => _isLoading;
   int _lastId = 1;
 
-  DateTime startDate = DateTime.parse('2000-01-01');
-  DateTime endDate = DateTime.now();
+  DateTime selectedStartDate = DateTime.parse('2000-01-01');
+  DateTime selectedEndDate = DateTime.now();
   String selectedLanguage = 'en';
   int selectedYear = 2023;
 
@@ -28,6 +29,7 @@ class Pr with ChangeNotifier {
   int get lastId => _lastId; // Геттер для получения списка книг
 
   // FILTER
+
 
   void searchDataChanged() {
     _books = [];
@@ -44,8 +46,8 @@ class Pr with ChangeNotifier {
     if (selectedYear != 0) {
       selectedYearString = selectedYear.toString();
     }
-    String formattedStartDate = startDate.toString().replaceAll(' ', 'T');
-    String formattedEndDate = endDate.toString().replaceAll(' ', 'T');
+    String formattedStartDate = selectedStartDate.toString().replaceAll(' ', 'T');
+    String formattedEndDate = selectedEndDate.toString().replaceAll(' ', 'T');
     String apiUrl = "$baseUrl?startDate=$formattedStartDate&endDate=$formattedEndDate"
         "&year=$selectedYearString&lang=$selectedLanguage&lastId=$_lastId";
     print(apiUrl);
