@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -48,7 +47,6 @@ class Pr with ChangeNotifier {
         "&year=$selectedYearString&lang=${searchFormData.selectedLanguage}&lastId=$_lastId";
     print(apiUrl);
     // exit(0);
-    final url = Uri.parse(apiUrl);
 
     fetchBooks(apiUrl, 3);
 
@@ -72,6 +70,7 @@ class Pr with ChangeNotifier {
 
         _lastId = meta['lastId'];
 
+        httpError += error.toString() + "...";
        // httpError += response.statusCode.toString() + "...";
         notify();
       } else if (response.statusCode == 422) {
@@ -86,7 +85,7 @@ class Pr with ChangeNotifier {
       notify();
 
       if (retryCount > 0) {
-        await Future.delayed(Duration(seconds: 1)); // Ждем 2 секунды перед повторным запросом
+        await Future.delayed(Duration(milliseconds: 500)); // Ждем 2 секунды перед повторным запросом
         await fetchBooks(apiUrl, retryCount - 1); // Повторяем запрос с уменьшенным счетчиком попыток
       }
     }

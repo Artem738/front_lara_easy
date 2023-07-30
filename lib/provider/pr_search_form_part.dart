@@ -15,6 +15,7 @@ extension PrMainSearchForm on Pr {
     _books = [];
     _lastId = 1;
     getBookData();
+    httpError = "";
     notify();
   }
 }
