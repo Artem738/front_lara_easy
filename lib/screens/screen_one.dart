@@ -43,16 +43,17 @@ class _ScreenOneState extends State<ScreenOne> {
       body: Column(
         children: [
           ExpansionTile(
+            childrenPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             title: _isFilterMenuOpen
                 ? Text(
               'Закрыть меню фильтра',
               textAlign: TextAlign.right,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
             ) // Hide the text when menu is open
                 : const Text(
               'Открыть меню фильтра',
               textAlign: TextAlign.right,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
             ),
             onExpansionChanged: (value) {
               setState(() {
@@ -64,7 +65,7 @@ class _ScreenOneState extends State<ScreenOne> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 10),
+                  SizedBox(height: 0),
                   // Text(context.watch<Pr>().httpError),
                   // SizedBox(height: 10),
                   Row(
@@ -84,7 +85,7 @@ class _ScreenOneState extends State<ScreenOne> {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          //SizedBox(height: 16),
           //if (!_isFilterMenuOpen) // Hide the button when the filter menu is expanded
 
           if (context
@@ -105,22 +106,17 @@ class _ScreenOneState extends State<ScreenOne> {
                       .watch<Pr>()
                       .books[index];
                   return ListTile(
-                    leading: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(book.imageSmall),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: book.imageSmall == null
-                          ? Image.network(
-                        'https://picsum.photos/id/1/100/100',
+                    leading: ClipOval(
+                      child: Image.network(
+                        book.imageSmall ?? 'https://picsum.photos/id/1/100/100',
                         fit: BoxFit.cover,
-                      )
-                          : null,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.network(
+                            'https://picsum.photos/id/1/100/100',
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
                     ),
                     title: Text(book.name, style: TextStyle(fontSize: 15)),
                     subtitle: Text("Year: ${book.year.toString()},  pages: ${book.pages}, lang: ${book.lang}"),

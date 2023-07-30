@@ -50,29 +50,50 @@ class Pr with ChangeNotifier {
     // exit(0);
     final url = Uri.parse(apiUrl);
 
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      final data = jsonData['data'];
-      final meta = jsonData['meta'];
-      final error = jsonData['error'];
-      final totalCount = meta['totalCount'];
+    fetchBooks(apiUrl, 3);
 
-      _books.addAll(totalCount == 0 ? [] : parseBooks(data));
+  }
 
-      _lastId = meta['lastId'];
+  Future<void> fetchBooks(String apiUrl, int retryCount) async {
+    final url = Uri.parse(apiUrl);
 
-      //print(_books[3].name);
-      httpError = response.statusCode.toString();
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        //print(response.body);
+        final jsonData = json.decode(response.body);
+        final data = jsonData['data'];
+        final meta = jsonData['meta'];
+        final error = jsonData['error'];
+        final totalCount = meta['totalCount'];
+
+        _books.addAll(totalCount == 0 ? [] : parseBooks(data));
+
+        _lastId = meta['lastId'];
+
+       // httpError += response.statusCode.toString() + "...";
+        notify();
+      } else if (response.statusCode == 422) {
+       // httpError += response.statusCode.toString() + "...";
+        notify();
+      } else {
+       // httpError += response.statusCode.toString() + "...";
+        notify();
+      }
+    } catch (e) {
+     // httpError += e.toString() + "...";
       notify();
-    } else if (response.statusCode == 422) {
-      httpError = response.statusCode.toString();
-      notify();
-    } else {
-      httpError = response.statusCode.toString();
-      notify();
+
+      if (retryCount > 0) {
+        await Future.delayed(Duration(seconds: 1)); // Ждем 2 секунды перед повторным запросом
+        await fetchBooks(apiUrl, retryCount - 1); // Повторяем запрос с уменьшенным счетчиком попыток
+      }
     }
   }
+
+
+
 
   List<Book> parseBooks(List<dynamic> dataList) {
     //Adding random image    https://api.slingacademy.com/public/sample-photos/100.jpeg

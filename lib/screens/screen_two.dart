@@ -10,8 +10,9 @@ class ScreenTwo extends StatefulWidget {
 class _ScreenTwoState extends State<ScreenTwo> {
   @override
   Widget build(BuildContext context) {
+   // print(context.watch<Pr>().httpError);
     return Scaffold(
-      body: Center(child: Text(context.watch<Pr>().books.length.toString())),
+      body: Center(child: Text(context.watch<Pr>().httpError)),
     );
   }
 }
